@@ -32,3 +32,72 @@ covid_mex <- covid %>%
 ```
 
 The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico** alone is **`r dim(covid_mex)`**.
+
+# Analysis & Findings
+
+## The Trend of Total Case Number
+
+```{r, message=FALSE, warning=FALSE}
+totalplot <-covid_mex %>% 
+  rename("Date" = date,
+         "Total Cases" = total_cases,
+         "New Cases" = new_cases,
+         "New Tests" = new_tests) %>% 
+  ggplot(aes(x=Date, y=`Total Cases`))+
+  geom_point(aes(size=`Total Cases`, color= `New Cases`), alpha=1/10)+
+  theme_light()
+totalplot <- ggplotly(totalplot)
+totalplot
+```
+
+## The Trend of Daily Case Number
+```{r}
+dailyplot <- covid_mex %>% 
+  rename("Date" = date,
+         "Total Cases" = total_cases,
+         "New Cases" = new_cases,
+         "New Tests" = new_tests) %>% 
+  ggplot(aes(x=Date, y=`New Cases`))+
+  geom_line(color="steelblue")+
+  theme_light()
+dailyplot <- ggplotly(dailyplot)
+dailyplot
+```
+
+## Top 6 Days With Biggest COVID Cases Number
+
+```{r case,echo=FALSE}
+case <- covid_mex %>% 
+  select(date, total_cases, new_cases, new_tests, total_tests) %>% 
+  mutate(`Percentage of New Cases` = round((new_cases/new_tests)*100,2)) %>% 
+  slice_max(new_cases, n=6) 
+case%>% 
+  rename("Date" = date,
+         "Total Cases" = total_cases,
+         "New Cases" = new_cases,
+         "New Tests" = new_tests,
+         "Total Tests" = total_tests) %>% 
+  kable(caption = "Top 6 Days With Biggest Number of COVID Cases") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
+```{r newcase,echo=FALSE}
+newcase <- covid_mex %>% 
+  select(date, total_cases, new_cases, new_tests, total_tests) %>% 
+  mutate(`Percentage of New Cases` = round((new_cases/new_tests)*100,2)) %>%  
+  slice_max(`Percentage of New Cases`,n = 6) 
+newcase%>% 
+  rename("Date" = date,
+         "Total Cases" = total_cases,
+         "New Cases" = new_cases,
+         "New Tests" = new_tests,
+         "Total Tests" = total_tests) %>%  
+  kable(caption = "Top 6 Days With Biggest Percetage of New COVID Cases") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+The table \@ref(tab:case) and \@ref(tab:newcase) above shows that:
+
+`r case[1,1]` reported maximum new COVID cases.<br>
+`r newcase[1,1]` had a more percentage of new cases reported.

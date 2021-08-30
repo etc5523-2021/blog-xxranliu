@@ -15,6 +15,8 @@ library(here)
 library(ggplot2)
 library(kableExtra)
 library(plotly)
+library(gganimate)
+library(lubridate)
 ```
 
 # Data Description
@@ -35,9 +37,9 @@ The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico**
 
 # Analysis & Findings
 
-## The Trend of Total Case Number
+## The Trend of Case Number
 
-```{r, message=FALSE, warning=FALSE}
+```{r total, fig.cap="The Trend of Total COVID Case Number",message=FALSE, warning=FALSE}
 totalplot <-covid_mex %>% 
   rename("Date" = date,
          "Total Cases" = total_cases,
@@ -50,8 +52,35 @@ totalplot <- ggplotly(totalplot)
 totalplot
 ```
 
-## The Trend of Daily Case Number
+```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
+covid_mex%>% 
+  select(total_deaths,total_cases,date) %>% 
+  mutate(`Death Rate` = total_deaths/total_cases) %>% 
+  pivot_longer(cols = c(total_deaths,total_cases), 
+               names_to = "Variable",   
+               values_to = "Count Number") %>% 
+  ggplot( aes(x = Variable, y =`Count Number`, fill=Variable)) +
+  geom_bar(stat='identity', position='identity') +
+  scale_fill_manual(values = c("#4fa9c9", "#2a7189"))+
+  theme_bw() +
+  labs(title = 'Date: {round(frame_time)}', 
+       x = ' ', 
+       y = 'Number of People') +
+  transition_time(date)
+```
+
 ```{r}
+deathrate <- covid_mex%>% 
+  select(total_deaths,total_cases,date) %>% 
+  mutate(death_rate = total_deaths/total_cases) %>%
+  mutate(death_rate = as.numeric(death_rate)) %>% 
+  select(death_rate) %>% 
+  drop_na() 
+```
+The average COVID death rate of Mexico is `r mean(deathrate$death_rate)`
+
+## The Trend of Daily Case Number
+```{r daily, fig.cap="The Trend of Daily Case Number"}
 dailyplot <- covid_mex %>% 
   rename("Date" = date,
          "Total Cases" = total_cases,
@@ -101,3 +130,41 @@ The table \@ref(tab:case) and \@ref(tab:newcase) above shows that:
 
 `r case[1,1]` reported maximum new COVID cases.<br>
 `r newcase[1,1]` had a more percentage of new cases reported.
+
+## The Percentage Trend of Test for COVID
+
+```{r test, fig.cap="The Percentage Trend of People Get Test for COVID"}
+testsplot <- covid_mex %>% 
+  mutate(`Tests Percentage`=total_tests_per_thousand/1000) %>% 
+  rename("Date"=date) %>% 
+  ggplot(aes(x = Date,
+             y =`Tests Percentage`))+
+  geom_line(color="#4E84C4")+
+  theme_light()
+testsplot <- ggplotly(testsplot)
+testsplot
+```
+
+```{r postitive, fig.cap="The Rate Trend of People Get Test Positive for COVID"}
+postitiveplot <- covid_mex %>% 
+  rename("Date" = date,
+         "Positive Rate" = positive_rate) %>% 
+  ggplot(aes(x = Date,
+             y =`Positive Rate`))+
+  geom_line(color="#4E84C4")+
+  theme_light()
+postitiveplot <- ggplotly(postitiveplot)
+postitiveplot
+```
+
+## The Percentage Trend of People Get Vaccin
+```{r vaccin, fig.cap="The Percentage Trend of People Get Vaccin"}
+vaccinplot <- covid_mex %>% 
+  mutate(`Vaccin Rate` = people_vaccinated/population)%>% 
+  rename("Date"=date) %>% 
+  ggplot(aes(Date, `Vaccin Rate`))+
+  geom_line(color =  "#293352")+
+  theme_light()
+vaccinplot <- ggplotly(vaccinplot)
+vaccinplot
+```

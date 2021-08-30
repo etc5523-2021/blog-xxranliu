@@ -1,0 +1,34 @@
+---
+title: "Mexico COVID Stats"
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+```
+
+```{r ,include=FALSE}
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(kableExtra)
+library(plotly)
+```
+
+# Data Description
+
+The data in this Blog is from [ourworldindata.org](hhttps://ourworldindata.org/coronavirus/country/mexico).
+
+The data is available in **csv**, **xlsx**format. I'm useing **csv** format for this blog post.
+
+```{r read,include=FALSE}
+covid <- read_csv(here::here("data/owid-covid-data.csv"))
+
+covid_mex <- covid %>% 
+  filter(location == "Mexico") %>% 
+  mutate(date=as.Date(date))
+```
+
+The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico** alone is **`r dim(covid_mex)`**.

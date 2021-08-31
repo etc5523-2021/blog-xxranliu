@@ -1,5 +1,5 @@
 ---
-title: "COVID in Mexico"
+title: "Blog 1 - COVID in Mexico"
 description: |
   A Date Visualisation of COVID in Mexico.
 author:
@@ -27,30 +27,15 @@ library(gganimate)
 library(lubridate)
 ```
 
-```{css ,echo = FALSE, eval=F}
-.title, .subtitle {
-  text-transform: uppercase;
-  font-family: copperplate;
-}
-.author {
-  font-family: serif;
-}
-.date {
-  font-family: papyrus;
-}
-body {
-  background-color: white;
-  color: black;
-  font-size: 20px;
-}
-strong {
-  color: brown;
-}
 
-```
+> Nothing can help us endure dark times better than our faith.     --Torsten Caspar
+
+
+![ ](mexico1.jpeg)
+
 # Data Description
 
-The data in this Blog is from [ourworldindata.org](hhttps://ourworldindata.org/coronavirus/country/mexico).
+The data in this Blog is from [**Our World in Data**](https://ourworldindata.org/coronavirus/country/mexico)^[Hannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - "Coronavirus Pandemic (COVID-19)". Published online at [ourworldindata.org](http://ourworldindata.org/).].
 
 The data is available in **csv**, **xlsx**format. I'm useing **csv** format for this blog post.
 
@@ -80,6 +65,8 @@ totalplot <-covid_mex %>%
 totalplot <- ggplotly(totalplot)
 totalplot
 ```
+The Figure\@ref(fig:total) is a point plot showing the number of total COVID cases from 2020-01-01 till 2021-08-28, and the size of the plot is referring the number of total COVID cases, with the blue color getting lighter, the new cases in one day gets larger. The graph shows that the rate of case growth is volatile, with relatively slower growth (darker colors) from August to November 2020 and from March to July 2021.
+
 
 ```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
 covid_mex%>% 
@@ -98,6 +85,8 @@ covid_mex%>%
   transition_time(date)
 ```
 
+The Figure\@ref(fig:totaldeath) represents the dynamics of the number of confirmed COVID diagnoses and the number of deaths due to New Coronavirus in Mexico from January 1, 2020 to August 28, 2021. By looking at the data in the above graph, one wonders what is the death rate of the New Coronavirus epidemic in Mexico?
+
 ```{r}
 deathrate <- covid_mex%>% 
   select(total_deaths,total_cases,date) %>% 
@@ -105,22 +94,29 @@ deathrate <- covid_mex%>%
   mutate(death_rate = as.numeric(death_rate)) %>% 
   select(death_rate) %>% 
   drop_na() 
-```
-The average COVID death rate of Mexico is `r mean(deathrate$death_rate)`
 
-## The Trend of Daily Case Number
+wdeathrate <- covid%>% 
+  select(total_deaths,total_cases,date) %>% 
+  mutate(death_rate = total_deaths/total_cases) %>%
+  mutate(death_rate = as.numeric(death_rate)) %>% 
+  select(death_rate) %>% 
+  drop_na() 
+```
+The world average COVID death rate is `r mean(wdeathrate$death_rate)` and the average COVID death rate of Mexico is `r mean(deathrate$death_rate)`, Which is `r mean(deathrate$death_rate)/mean(wdeathrate$death_rate)` times of the world average.
+
+## The Trend of Daily Death Number
 ```{r daily, fig.cap="The Trend of Daily Case Number"}
-dailyplot <- covid_mex %>% 
+deathplot <- covid_mex %>% 
   rename("Date" = date,
-         "Total Cases" = total_cases,
-         "New Cases" = new_cases,
-         "New Tests" = new_tests) %>% 
-  ggplot(aes(x=Date, y=`New Cases`))+
+         "New Deaths" = new_deaths) %>% 
+  ggplot(aes(x=Date, y=`New Deaths`))+
   geom_line(color="steelblue")+
   theme_light()
-dailyplot <- ggplotly(dailyplot)
-dailyplot
+deathplot <- ggplotly(deathplot)
+deathplot
 ```
+
+Since the mortality rate of the new coronavirus outbreak in Mexico is much higher than the world average, I wonder about the number of new deaths it has added each day, and according to the Figure\@ref(fig:daily), we can tell that the number of deaths on the days 2020-10-05, 2021-02-05, 2021-04-10, and 2021-06-01 are much higher than the number of deaths in the time period they are in.
 
 ## Top 6 Days With Biggest COVID Cases Number
 
@@ -154,8 +150,7 @@ newcase%>%
   kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
-
-The table \@ref(tab:case) and \@ref(tab:newcase) above shows that:
+So, whether the mortality rate of the new coronavirus epidemic in Spain and the number of new confirmations of it are related, according to the table \@ref(tab:case) and \@ref(tab:newcase) above shows that fit Top 6 days with biggest number of cases, there are two of the six days with the highest number of new cases coincided with dates with oddly high death rates, and one of the six days with the highest percentage of new cases overlapped with a date with an oddly high death rate. Also:
 
 `r case[1,1]` reported maximum new COVID cases.<br>
 `r newcase[1,1]` had a more percentage of new cases reported.
@@ -174,6 +169,10 @@ testsplot <- ggplotly(testsplot)
 testsplot
 ```
 
+Is the number of confirmed cases due to changes in the number of tests? According to the Figure\@ref(fig:test), the percentage of tests has been increasing steadily without any significant fluctuations, so the sudden increase in the number of confirmed cases on a particular day should not be related to the number of tests.
+
+At the same time, the new crown epidemic is highly transmissible and spreading rapidly, and by August 28, 2021, the percentage of tests in Mexico had not yet reached seven percent, a relatively small percentage even compared to some developing countries.
+
 ```{r postitive, fig.cap="The Rate Trend of People Get Test Positive for COVID"}
 postitiveplot <- covid_mex %>% 
   rename("Date" = date,
@@ -186,6 +185,8 @@ postitiveplot <- ggplotly(postitiveplot)
 postitiveplot
 ```
 
+Excluding the number of tests that led to a sharp increase in the number of confirmations on individual dates, we see from the Figure\@ref(fig:postitive) that the percentage of positive tests has a large fluctuation, with the percentage of positive tests reaching a peak around July 2020 until May 26, 2021, when it dropped to 0.156, followed by a wave of increases until the latest data showed a small decrease.
+
 ## The Percentage Trend of People Get Vaccin
 ```{r vaccin, fig.cap="The Percentage Trend of People Get Vaccin"}
 vaccinplot <- covid_mex %>% 
@@ -197,3 +198,22 @@ vaccinplot <- covid_mex %>%
 vaccinplot <- ggplotly(vaccinplot)
 vaccinplot
 ```
+
+```{r}
+vaccin <- covid_mex %>% 
+  select(people_vaccinated,population, date) %>% 
+  mutate(vaccin_rate = people_vaccinated/population) %>% 
+  select(vaccin_rate,date) %>% 
+  drop_na() 
+vaccinrate <- vaccin[rev(order(as.Date(vaccin$date))),]
+
+wvaccin <- covid %>% 
+  select(people_vaccinated,population, date) %>% 
+  mutate(vaccin_rate = people_vaccinated/population) %>% 
+  select(vaccin_rate,date) %>% 
+  drop_na() %>% 
+  filter(date=="2021-08-27")
+wvaccinrate <- mean(wvaccin$vaccin_rate)
+```
+
+The newest COVID vaccin rate in Mexico is `r vaccinrate[1,1]` and the average COVID vaccin rate in the world is `r wvaccinrate`, Which is `r ((wvaccinrate/vaccinrate[1,1])-1)*100`% higher than the vaccin rate in Mexico.

@@ -19,6 +19,20 @@ library(gganimate)
 library(lubridate)
 ```
 
+```{css ,echo = FALSE, eval=F}
+h1{
+  color: "#006600";
+  font-size: 50px;
+}
+h2{
+  color: "#990000";
+  font-size: 20px;
+}
+thead {
+  background-color: #006DAE;
+  color: white;
+}
+```
 # Data Description
 
 The data in this Blog is from [ourworldindata.org](hhttps://ourworldindata.org/coronavirus/country/mexico).

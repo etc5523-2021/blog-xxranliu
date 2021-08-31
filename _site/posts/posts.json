@@ -1,0 +1,19 @@
+[
+  {
+    "path": "posts/welcome/",
+    "title": "Welcome to My Blog",
+    "description": "Welcome to my new blog.\nI hope you enjoy reading what in this Blog!",
+    "author": [
+      {
+        "name": "Xinran Liu",
+        "url": "https://example.com/norajones"
+      }
+    ],
+    "date": "2021-08-29",
+    "categories": [],
+    "contents": "\n\n\n\n",
+    "preview": {},
+    "last_modified": "2021-08-30T21:53:33+08:00",
+    "input_file": {}
+  }
+]

@@ -1,11 +1,12 @@
 ---
 title: "COVID in Mexico"
 description: |
-  A short description of the post.
+  A Date Visualisation of COVID in Mexico.
 author:
   - name: Xinran Liu
     url: https://example.com/norajones
 date: 08-31-2021
+preview: Mexico.jpeg
 output:
   distill::distill_article:
     self_contained: false
@@ -27,18 +28,25 @@ library(lubridate)
 ```
 
 ```{css ,echo = FALSE, eval=F}
-h1{
-  color: "#006600";
-  font-size: 50px;
+.title, .subtitle {
+  text-transform: uppercase;
+  font-family: copperplate;
 }
-h2{
-  color: "#990000";
+.author {
+  font-family: serif;
+}
+.date {
+  font-family: papyrus;
+}
+body {
+  background-color: white;
+  color: black;
   font-size: 20px;
 }
-thead {
-  background-color: #006DAE;
-  color: white;
+strong {
+  color: brown;
 }
+
 ```
 # Data Description
 

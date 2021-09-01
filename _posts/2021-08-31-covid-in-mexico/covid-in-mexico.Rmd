@@ -95,12 +95,12 @@ totalplot
 ```
 The Figure\@ref(fig:total) is a point plot showing the number of total COVID cases from 2020-01-01 till 2021-08-28, and the size of the plot is referring the number of total COVID cases, with the blue color getting darker, the new cases in one day gets larger. The graph shows that the rate of case growth is volatile, with relatively slower growth (darker colors) from August to November 2020 and from March to July 2021.
 
-
 ```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
 covid_mex%>% 
   select(total_deaths,total_cases,date) %>% 
-  mutate(`Death Rate` = total_deaths/total_cases) %>% 
-  pivot_longer(cols = c(total_deaths,total_cases), 
+  rename("Total Deaths" = total_deaths,
+         "Total Cases" = total_cases) %>% 
+  pivot_longer(cols = c(`Total Deaths`,`Total Cases`), 
                names_to = "Variable",   
                values_to = "Count Number") %>% 
   ggplot( aes(x = Variable, y =`Count Number`, fill=Variable)) +

@@ -1,5 +1,5 @@
 ---
-title: "Blogs by Xinran Liu"
+title: "Blogs for ETC5523"
 site: distill::distill_website
 listing: posts
 ---

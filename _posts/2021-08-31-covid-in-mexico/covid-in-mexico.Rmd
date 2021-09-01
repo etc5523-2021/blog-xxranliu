@@ -1,15 +1,15 @@
 ---
-title: "Blog 1 - COVID in Mexico"
+title: "COVID in Mexico"
 description: |
   A Date Visualisation of COVID in Mexico.
 author:
   - name: Xinran Liu
-    url: https://example.com/norajones
 date: 08-31-2021
 preview: Mexico.jpeg
 output:
   distill::distill_article:
     self_contained: false
+    theme: theme.css
 ---
 
 
@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
 
 ```{r ,include=FALSE}
 library(tidyverse)
+library(rmarkdown)
 library(here)
 library(ggplot2)
 library(kableExtra)
@@ -27,13 +28,20 @@ library(gganimate)
 library(lubridate)
 ```
 
-
 > Nothing can help us endure dark times better than our faith.     --Torsten Caspar
+
+## Introduction
+
+The COVID-19 pandemic, also known as the coronavirus pandemic, is an ongoing global pandemic of coronavirus disease 2019 (COVID-19) caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). Since 2021, variants of the virus have emerged or become dominant in many countries, with the Delta, Alpha and Beta variants being the most virulent. As of 1 September 2021, more than 217 million cases and 4.51 million deaths have been confirmed, making it one of the deadliest pandemics in history.
+
+Recommended preventive measures include social distancing, wearing face masks in public, ventilation and air-filtering, hand washing, covering one's mouth when sneezing or coughing, disinfecting surfaces, and monitoring and self-isolation for people exposed or symptomatic. Several vaccines have been distributed in many countries since December 2020.
+
+The virus was confirmed to have reached Mexico in February 2020. However, the National Council of Science and Technology (CONACYT) reported two cases of COVID-19 in mid-January 2020 in the states of Nayarit and Tabasco, with one case per state.
 
 
 ![ ](mexico1.jpeg)
 
-# Data Description
+## Data Description
 
 The data in this Blog is from [**Our World in Data**](https://ourworldindata.org/coronavirus/country/mexico)^[Hannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - "Coronavirus Pandemic (COVID-19)". Published online at [ourworldindata.org](http://ourworldindata.org/).].
 
@@ -44,28 +52,48 @@ covid <- read_csv(here::here("data/owid-covid-data.csv"))
 
 covid_mex <- covid %>% 
   filter(location == "Mexico") %>% 
-  mutate(date=as.Date(date))
+  mutate(date=as.Date(date)) %>% 
+  select(date, new_cases, new_deaths, new_tests, total_cases, total_deaths, total_tests,
+         total_tests_per_thousand, positive_rate, people_vaccinated, population)
 ```
 
+The variables used in this blog are:
+
+```{r,}
+d <- data.frame(Variables = names(covid_mex),
+                Description = c("Date values",
+                                "New cases recorded on date",
+                                "New deaths recorded on date",
+                                "New tests recorded on date",
+                                "Total cases recorded on date",
+                                "Total deaths recorded on date",
+                                "Total tests recorded on date",
+                                "Total tests per thousand recorded on date",
+                                "Rate of test positive recorded on date",
+                                "Number of people get vaccin recorded on date",
+                                "Population of Mexico"))
+paged_table(d, options = list(rows.print = 6, cols.print = 2))
+  
+```
 The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico** alone is **`r dim(covid_mex)`**.
 
-# Analysis & Findings
+## Analysis & Findings
 
-## The Trend of Case Number
+### The Trend of Case Number
 
 ```{r total, fig.cap="The Trend of Total COVID Case Number",message=FALSE, warning=FALSE}
 totalplot <-covid_mex %>% 
   rename("Date" = date,
          "Total Cases" = total_cases,
-         "New Cases" = new_cases,
-         "New Tests" = new_tests) %>% 
-  ggplot(aes(x=Date, y=`Total Cases`))+
-  geom_point(aes(size=`Total Cases`, color= `New Cases`), alpha=1/10)+
-  theme_light()
+         "New Cases" = new_cases) %>% 
+  ggplot(aes(x=Date, y=`Total Cases`,color= `New Cases`,size=`Total Cases`))+
+  geom_point( alpha=2/5)+
+  theme_light()+ 
+  scale_color_gradient(low = "#f2f5f7", high = "#005580")
 totalplot <- ggplotly(totalplot)
 totalplot
 ```
-The Figure\@ref(fig:total) is a point plot showing the number of total COVID cases from 2020-01-01 till 2021-08-28, and the size of the plot is referring the number of total COVID cases, with the blue color getting lighter, the new cases in one day gets larger. The graph shows that the rate of case growth is volatile, with relatively slower growth (darker colors) from August to November 2020 and from March to July 2021.
+The Figure\@ref(fig:total) is a point plot showing the number of total COVID cases from 2020-01-01 till 2021-08-28, and the size of the plot is referring the number of total COVID cases, with the blue color getting darker, the new cases in one day gets larger. The graph shows that the rate of case growth is volatile, with relatively slower growth (darker colors) from August to November 2020 and from March to July 2021.
 
 
 ```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
@@ -104,7 +132,7 @@ wdeathrate <- covid%>%
 ```
 The world average COVID death rate is `r mean(wdeathrate$death_rate)` and the average COVID death rate of Mexico is `r mean(deathrate$death_rate)`, Which is `r mean(deathrate$death_rate)/mean(wdeathrate$death_rate)` times of the world average.
 
-## The Trend of Daily Death Number
+### The Trend of Daily Death Number
 ```{r daily, fig.cap="The Trend of Daily Case Number"}
 deathplot <- covid_mex %>% 
   rename("Date" = date,
@@ -118,7 +146,7 @@ deathplot
 
 Since the mortality rate of the new coronavirus outbreak in Mexico is much higher than the world average, I wonder about the number of new deaths it has added each day, and according to the Figure\@ref(fig:daily), we can tell that the number of deaths on the days 2020-10-05, 2021-02-05, 2021-04-10, and 2021-06-01 are much higher than the number of deaths in the time period they are in.
 
-## Top 6 Days With Biggest COVID Cases Number
+### Top 6 Days With Biggest COVID Cases Number
 
 ```{r case,echo=FALSE}
 case <- covid_mex %>% 
@@ -155,7 +183,7 @@ So, whether the mortality rate of the new coronavirus epidemic in Spain and the 
 `r case[1,1]` reported maximum new COVID cases.<br>
 `r newcase[1,1]` had a more percentage of new cases reported.
 
-## The Percentage Trend of Test for COVID
+### The Percentage Trend of Test for COVID
 
 ```{r test, fig.cap="The Percentage Trend of People Get Test for COVID"}
 testsplot <- covid_mex %>% 
@@ -187,7 +215,7 @@ postitiveplot
 
 Excluding the number of tests that led to a sharp increase in the number of confirmations on individual dates, we see from the Figure\@ref(fig:postitive) that the percentage of positive tests has a large fluctuation, with the percentage of positive tests reaching a peak around July 2020 until May 26, 2021, when it dropped to 0.156, followed by a wave of increases until the latest data showed a small decrease.
 
-## The Percentage Trend of People Get Vaccin
+### The Percentage Trend of People Get Vaccin
 ```{r vaccin, fig.cap="The Percentage Trend of People Get Vaccin"}
 vaccinplot <- covid_mex %>% 
   mutate(`Vaccin Rate` = people_vaccinated/population)%>% 

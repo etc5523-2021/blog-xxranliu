@@ -1,12 +1,10 @@
 name: "blog"
-title: "Blog about COVID-19"
+title: "ETC5523 Blog"
 description: |
-  My Blog
+  Some Blog Posting for ETC5523
 output_dir: "_site"
 navbar:
   right:
-    - text: "Home"
-      href: index.html
     - text: "About"
       href: about.html
     - icon: fa fa-github

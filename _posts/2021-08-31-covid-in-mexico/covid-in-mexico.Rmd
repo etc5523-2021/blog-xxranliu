@@ -32,6 +32,8 @@ library(sparkline)
 
 > Nothing can help us endure dark times better than our faith.     --Torsten Caspar
 
+![ ](covid.jpeg)
+
 ## Introduction
 
 The COVID-19 pandemic, also known as the coronavirus pandemic, is an ongoing global pandemic of coronavirus disease 2019 (COVID-19) caused by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2). Since 2021, variants of the virus have emerged or become dominant in many countries, with the Delta, Alpha and Beta variants being the most virulent. As of 1 September 2021, more than 217 million cases and 4.51 million deaths have been confirmed, making it one of the deadliest pandemics in history.

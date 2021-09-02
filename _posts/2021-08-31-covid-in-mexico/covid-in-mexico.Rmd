@@ -79,7 +79,7 @@ d <- data.frame(Variables = names(covid_mex),
 paged_table(d, options = list(rows.print = 6, cols.print = 2))
   
 ```
-The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico** alone is **`r dim(covid_mex)`**.
+The main dataset is of dimensions **`r dim(covid)`**, whereas the mainly used date for  **Mexico** alone is **`r dim(covid_mex)`**.
 
 ## Analysis & Findings
 

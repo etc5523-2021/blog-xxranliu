@@ -26,6 +26,8 @@ library(kableExtra)
 library(plotly)
 library(gganimate)
 library(lubridate)
+library(DT)
+library(sparkline)
 ```
 
 > Nothing can help us endure dark times better than our faith.     --Torsten Caspar
@@ -79,21 +81,46 @@ The main dataset is of dimensions **`r dim(covid)`**, whereas that of **Mexico**
 
 ## Analysis & Findings
 
-### The Trend of Case Number
+### The Trend of Numbers
 
-```{r total, fig.cap="The Trend of Total COVID Case Number",message=FALSE, warning=FALSE}
-totalplot <-covid_mex %>% 
-  rename("Date" = date,
-         "Total Cases" = total_cases,
-         "New Cases" = new_cases) %>% 
-  ggplot(aes(x=Date, y=`Total Cases`,color= `New Cases`,size=`Total Cases`))+
-  geom_point( alpha=2/5)+
-  theme_light()+ 
-  scale_color_gradient(low = "#f2f5f7", high = "#005580")
-totalplot <- ggplotly(totalplot)
-totalplot
+```{r sum, message=FALSE, warning=FALSE}
+case <- covid_mex %>% 
+  mutate(year = year(date)) %>%
+  mutate(month = month(date)) %>%
+  group_by(year,month) 
+
+case$date <- with(case, sprintf("%d-%02d", year, month))
+
+case <- case %>% select(1,2,3,4) %>% 
+  group_by(date) 
+
+case %>% 
+  summarise(new_cases = spk_chr(new_cases,
+                                type = "line",
+                                highlightLineColor = 'orange', 
+                                highlightSpotColor = 'orange'),
+            new_deaths = spk_chr(new_deaths,
+                                type = "line",
+                                highlightLineColor = 'orange', 
+                                highlightSpotColor = 'orange'),
+            new_tests = spk_chr(new_tests,
+                                type = "line",
+                                highlightLineColor = 'orange', 
+                                highlightSpotColor = 'orange')) %>%
+  datatable(escape = FALSE,
+            rownames = FALSE,
+            colnames = c("Date", "New Cases", "New Death", "New Tests"),
+            class = list(display = c("striped", "hover")),
+            options = list(fnDrawCallback = htmlwidgets::JS('function(){
+                                                             HTMLWidgets.staticRender();
+                                                             }'))
+            ) %>% 
+    spk_add_deps() 
 ```
-The Figure\@ref(fig:total) is a point plot showing the number of total COVID cases from 2020-01-01 till 2021-08-28, and the size of the plot is referring the number of total COVID cases, with the blue color getting darker, the new cases in one day gets larger. The graph shows that the rate of case growth is volatile, with relatively slower growth (darker colors) from August to November 2020 and from March to July 2021.
+This table includes the date, new cases, new death people and new tests people by month since January 2020 to August 2021.It can search by month or year as wanted in the table' which is really convenient for reading the table.
+
+The vacancy in the number of new deaths in January and February 2020 implies that there were not many deaths caused by the COVID virus, but this may be because the COVID cases only appeared and grew rapidly at the end of February. In contrast, new cases fluctuated greatly from March to September 2020. new cases and deaths decreased to a low point in October 2020 but continued to fluctuate again in November. The number of deaths fluctuated downward until March 2021, but the number of new cases still fluctuated significantly until the latest.
+
 
 ```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
 covid_mex%>% 

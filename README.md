@@ -20,7 +20,7 @@ The relevant blog post for this assessment is in https://xxranliu.netlify.app/po
 - [-] Table 1
 - [-] Table 2
 - [-] Customised website with CSS
-- [ ] Submitted the entire blog to Moodle
+- [-] Submitted the entire blog to Moodle
 
 ## Blog Post 2
 

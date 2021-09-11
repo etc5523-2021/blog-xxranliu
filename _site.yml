@@ -5,6 +5,12 @@ description: |
 output_dir: "_site"
 navbar:
   right:
+    - text: "Blogs"
+      menu:
+        - text: "Blog1"
+          href: posts/2021-08-31-covid-in-mexico/index.html
+        - text: "Blog2"
+          href: posts/2021-09-11-covid-in-brazil/index.html
     - text: "About"
       href: about.html
     - icon: fa fa-github

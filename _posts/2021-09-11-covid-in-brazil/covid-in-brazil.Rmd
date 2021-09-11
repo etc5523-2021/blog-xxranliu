@@ -1,0 +1,77 @@
+---
+title: "COVID in Brazil"
+description: |
+  A Date Visualisation of COVID in Brazil.
+author:
+  - name: Xinran Liu
+    url: {}
+date: 09-11-2021
+preview: brazil.jpeg
+output:
+  distill::distill_article:
+    self_contained: false
+    theme: theme.css
+---
+
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+```
+
+```{r ,include=FALSE}
+library(tidyverse)
+library(rmarkdown)
+library(here)
+library(ggplot2)
+library(kableExtra)
+library(plotly)
+library(gganimate)
+library(lubridate)
+library(DT)
+library(sparkline)
+```
+
+## Introduction
+
+Covid-19 has already left a trail of death and despair in Brazil, one of the worst in the world. Now, a year into the pandemic, the country is setting another wrenching record.
+
+No other nation that experienced such a major outbreak is still grappling with record-setting death tolls and a health care system on the brink of collapse. Many other hard-hit nations are, instead, taking tentative steps toward a semblance of normalcy.
+
+But Brazil is battling a more contagious variant that has trampled one major city and is spreading to others, even as Brazilians toss away precautionary measures that could keep them safe.
+
+## Data Description
+
+The data in this Blog is from [**Our World in Data**](https://ourworldindata.org/coronavirus/country/mexico)^[Hannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - "Coronavirus Pandemic (COVID-19)". Published online at [ourworldindata.org](http://ourworldindata.org/).].
+
+The data is available in **csv**, **xlsx**format. I'm useing **csv** format for this blog post.
+
+```{r read,include=FALSE}
+covid <- read_csv(here::here("data/owid-covid-data.csv"))
+
+covid_bra <- covid %>% 
+  filter(location == "Brazil") %>% 
+  mutate(date=as.Date(date)) %>% 
+  select(date, new_cases, new_deaths, new_tests, total_cases, total_deaths, total_tests,
+         total_tests_per_thousand, positive_rate, people_vaccinated, population)
+```
+
+```{r,}
+d <- data.frame(Variables = names(covid_bra),
+                Description = c("Date values",
+                                "New cases recorded on date",
+                                "New deaths recorded on date",
+                                "New tests recorded on date",
+                                "Total cases recorded on date",
+                                "Total deaths recorded on date",
+                                "Total tests recorded on date",
+                                "Total tests per thousand recorded on date",
+                                "Rate of test positive recorded on date",
+                                "Number of people get vaccin recorded on date",
+                                "Population of Mexico"))
+paged_table(d, options = list(rows.print = 6, cols.print = 2))
+  
+```
+
+The main dataset is of dimensions **`r dim(covid)`**, whereas the mainly used date for  **Brazil** alone is **`r dim(covid_bra)`**.
+
+

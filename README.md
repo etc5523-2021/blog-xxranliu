@@ -26,11 +26,11 @@ The relevant blog post for this assessment is in https://xxranliu.netlify.app/po
 
 This assessment is due Fri Sep 17 2021 11.55PM AEST.
 
-My selected country is [FILL].
+My selected country is Brazil.
 
 The relevant blog post for this assessment is in [FILL].html
 
-- [ ] Selected a new country
+- [-] Selected a new country
 - [ ] Data Story 1
 - [ ] Data Story 2
 - [ ] Graph 1

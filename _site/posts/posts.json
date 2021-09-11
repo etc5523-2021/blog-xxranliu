@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2021-09-11-covid-in-brazil/",
+    "title": "COVID in Brazil",
+    "description": "A Date Visualisation of COVID in Brazil.",
+    "author": [
+      {
+        "name": "Xinran Liu",
+        "url": {}
+      }
+    ],
+    "date": "2021-09-11",
+    "categories": [],
+    "contents": "\nIntroduction\nCovid-19 has already left a trail of death and despair in Brazil, one of the worst in the world. Now, a year into the pandemic, the country is setting another wrenching record.\nNo other nation that experienced such a major outbreak is still grappling with record-setting death tolls and a health care system on the brink of collapse. Many other hard-hit nations are, instead, taking tentative steps toward a semblance of normalcy.\nBut Brazil is battling a more contagious variant that has trampled one major city and is spreading to others, even as Brazilians toss away precautionary measures that could keep them safe.\nData Description\nThe data in this Blog is from Our World in Data1.\nThe data is available in csv, xlsxformat. I’m useing csv format for this blog post.\n\n\n\n{\"columns\":[{\"label\":[\"Variables\"],\"name\":[1],\"type\":[\"chr\"],\"align\":[\"left\"]},{\"label\":[\"Description\"],\"name\":[2],\"type\":[\"chr\"],\"align\":[\"left\"]}],\"data\":[{\"1\":\"date\",\"2\":\"Date values\"},{\"1\":\"new_cases\",\"2\":\"New cases recorded on date\"},{\"1\":\"new_deaths\",\"2\":\"New deaths recorded on date\"},{\"1\":\"new_tests\",\"2\":\"New tests recorded on date\"},{\"1\":\"total_cases\",\"2\":\"Total cases recorded on date\"},{\"1\":\"total_deaths\",\"2\":\"Total deaths recorded on date\"},{\"1\":\"total_tests\",\"2\":\"Total tests recorded on date\"},{\"1\":\"total_tests_per_thousand\",\"2\":\"Total tests per thousand recorded on date\"},{\"1\":\"positive_rate\",\"2\":\"Rate of test positive recorded on date\"},{\"1\":\"people_vaccinated\",\"2\":\"Number of people get vaccin recorded on date\"},{\"1\":\"population\",\"2\":\"Population of Mexico\"}],\"options\":{\"columns\":{\"min\":{},\"max\":[2]},\"rows\":{\"min\":[6],\"max\":[6]},\"pages\":{}}}\n  \n\nThe main dataset is of dimensions 112659, 62, whereas the mainly used date for Brazil alone is 550, 11.\n\nHannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - “Coronavirus Pandemic (COVID-19)”. Published online at ourworldindata.org.↩︎\n",
+    "preview": "posts/2021-09-11-covid-in-brazil/brazil.jpeg",
+    "last_modified": "2021-09-11T15:56:20+08:00",
+    "input_file": {}
+  },
+  {
     "path": "posts/2021-08-31-covid-in-mexico/",
     "title": "COVID in Mexico",
     "description": "A Date Visualisation of COVID in Mexico.",

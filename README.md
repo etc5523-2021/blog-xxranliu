@@ -31,9 +31,9 @@ My selected country is Brazil.
 The relevant blog post for this assessment is in https://xxranliu.netlify.app/posts/2021-09-11-covid-in-brazil.html
 
 - [-] Selected a new country
-- [ ] Data Story 1
-- [ ] Data Story 2
-- [ ] Graph 1
-- [ ] Graph 2
-- [ ] Submitted the entire blog to Moodle
+- [-] Data Story 1
+- [-] Data Story 2
+- [-] Graph 1
+- [-] Graph 2
+- [-] Submitted the entire blog to Moodle
 

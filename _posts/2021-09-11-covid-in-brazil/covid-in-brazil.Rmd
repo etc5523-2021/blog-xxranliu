@@ -29,9 +29,17 @@ library(gganimate)
 library(lubridate)
 library(DT)
 library(sparkline)
+library(ggrepel)
+library(colorspace)
+library(gghighlight)
+library(dygraphs)
+library(xts) 
+library(maps)
 ```
 
-## Introduction
+![ ](covid1.jpeg)
+
+## Introduction `r emo::ji("pushpin")`
 
 Covid-19 has already left a trail of death and despair in Brazil, one of the worst in the world. Now, a year into the pandemic, the country is setting another wrenching record.
 
@@ -39,9 +47,9 @@ No other nation that experienced such a major outbreak is still grappling with r
 
 But Brazil is battling a more contagious variant that has trampled one major city and is spreading to others, even as Brazilians toss away precautionary measures that could keep them safe.
 
-## Data Description
+## Data Description `r emo::ji("page")`
 
-The data in this Blog is from [**Our World in Data**](https://ourworldindata.org/coronavirus/country/mexico)^[Hannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - "Coronavirus Pandemic (COVID-19)". Published online at [ourworldindata.org](http://ourworldindata.org/).].
+The data in this Blog is from [**Our World in Data**](https://ourworldindata.org/coronavirus/country/brazil)^[Hannah Ritchie, Edouard Mathieu, Lucas Rodés-Guirao, Cameron Appel, Charlie Giattino, Esteban Ortiz-Ospina, Joe Hasell, Bobbie Macdonald, Diana Beltekian and Max Roser (2020) - "Coronavirus Pandemic (COVID-19)". Published online at [ourworldindata.org](http://ourworldindata.org/).].
 
 The data is available in **csv**, **xlsx**format. I'm useing **csv** format for this blog post.
 
@@ -52,7 +60,7 @@ covid_bra <- covid %>%
   filter(location == "Brazil") %>% 
   mutate(date=as.Date(date)) %>% 
   select(date, new_cases, new_deaths, new_tests, total_cases, total_deaths, total_tests,
-         total_tests_per_thousand, positive_rate, people_vaccinated, population)
+         total_tests_per_thousand, positive_rate, total_vaccinations, people_vaccinated, people_fully_vaccinated, population)
 ```
 
 ```{r,}
@@ -66,12 +74,139 @@ d <- data.frame(Variables = names(covid_bra),
                                 "Total tests recorded on date",
                                 "Total tests per thousand recorded on date",
                                 "Rate of test positive recorded on date",
-                                "Number of people get vaccin recorded on date",
-                                "Population of Mexico"))
-paged_table(d, options = list(rows.print = 6, cols.print = 2))
+                                "Total vaccinations number",
+                                "Number of people get frist vaccin",
+                                "Number of people get fully vaccin",
+                                "Population of brazil"))
+paged_table(d, options = list(rows.print = 7, cols.print = 2))
   
 ```
 
 The main dataset is of dimensions **`r dim(covid)`**, whereas the mainly used date for  **Brazil** alone is **`r dim(covid_bra)`**.
 
+## Analysis & Findings `r emo::ji("magnifying")`
 
+### Carform Cases and Death Number
+```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number in Brazil"}
+options(scipen=200)
+covid_bra%>% 
+  select(total_deaths,total_cases,date) %>% 
+  rename("Total Deaths" = total_deaths,
+         "Total Cases" = total_cases) %>% 
+  pivot_longer(cols = c(`Total Deaths`,`Total Cases`), 
+               names_to = "Variable",   
+               values_to = "Count Number") %>% 
+  mutate(`Count Number (Million)`=`Count Number`/1000000) %>% 
+  ggplot( aes(x = Variable, y =`Count Number (Million)`, fill=Variable)) +
+  geom_bar(stat='identity', position='identity') +
+  scale_fill_manual(values = c("#b8a9c9", "#622569"))+
+  theme_bw() +
+  labs(title = 'Date: {round(frame_time)}', 
+       x = ' ', 
+       y = 'Number of People (Million)') +
+  theme(axis.text.x.bottom = element_text(size = 15,
+                                          face = "bold"),
+        axis.title.y.left = element_text(size = 10,
+                                         face = "bold"),
+        axis.text.y.left = element_text(size = 8,
+                                        face = "bold"),
+        plot.title = element_text(size = 15,
+                                  face = "bold",
+                                  color = "#5b9aa0"),
+        legend.position = "None")+
+  transition_time(date)
+```
+
+The Figure\@ref(fig:totaldeath) represents the dynamics of the number of confirmed COVID diagnoses and the number of deaths due to New Coronavirus in Mexico from February 26, 2020 to August 27, 2021. By looking at the data in the graph, wonders what is the death rate of the New Coronavirus epidemic in Brazil?
+
+```{r}
+deathrate <- covid_bra%>% 
+  select(total_deaths,total_cases,date) %>% 
+  mutate(death_rate = total_deaths/total_cases) %>%
+  mutate(death_rate = as.numeric(death_rate)) %>% 
+  select(death_rate) %>% 
+  drop_na() 
+
+wdeathrate <- covid%>% 
+  select(total_deaths,total_cases,date) %>% 
+  mutate(death_rate = total_deaths/total_cases) %>%
+  mutate(death_rate = as.numeric(death_rate)) %>% 
+  select(death_rate) %>% 
+  drop_na() 
+
+```
+
+The world average COVID death rate is `r round(mean(wdeathrate$death_rate)*100, digits = 2)` % and the average COVID death rate of Brazil is `r round(mean(deathrate$death_rate)*100, digits = 2)`%, Which is `r round(mean(deathrate$death_rate)/mean(wdeathrate$death_rate), digit=2)` times of the world average.
+
+### The Trend of Daily Death Number
+```{r daily, fig.cap="The Trend of Daily Case Number"}
+deathplot <- covid_bra %>% 
+  select(date, new_deaths) %>% 
+  arrange(desc(new_deaths)) %>%  
+  ggplot(aes(x=date))+
+  geom_line(aes(y=new_deaths), color="#b8a9c9")+
+  geom_point(aes(y = new_deaths), color = "#622569", size = 0.8)+
+  gghighlight(new_deaths > 3500)+
+  theme_bw()+
+  labs(title = "Daily New Death Numbers",
+       x = "Date",
+       y = "New Death Number")+
+  theme(text = element_text(size = 10, face = "bold", color = "black"))
+
+deathplot <- ggplotly(deathplot)
+deathplot
+```
+
+According to the Figure\@ref(fig:daily), We can see that although the situation in March 2021 is still relatively stable, the most deaths are all concentrated in April, and all deaths are greater than 3500. There are even two days where the number of deaths is greater than 4000.
+
+### The Trend of People Getting Vaccin
+
+```{r vaccinplot, fig.cap="The Trend of People Get Vaccin"}
+vaccin <- covid_bra %>%
+  select(date, total_vaccinations, people_vaccinated, people_fully_vaccinated, population) %>%
+  mutate("Total vaccinations" = total_vaccinations/1000000,
+         "People get 1 dose" = people_vaccinated/1000000,
+         "People get 2 doses" = people_fully_vaccinated/1000000)%>%
+  mutate(date = as.Date(date)) %>%
+  drop_na() 
+
+p2 <- ggplot(vaccin, aes(x = date))+
+  geom_area(aes(y = `Total vaccinations`,  fill = "Total vaccinations"), 
+            alpha = 0.3, color="#667292") +
+  geom_area(aes(y = `People get 1 dose`,  fill = "People get 1 dose"),
+            alpha = 0.3, color="#622569") +
+  geom_area(aes(y = `People get 2 doses`, fill = "People get 2 doses"), 
+            alpha = 0.3, color="#588c7e") +
+  theme_bw() +
+  labs(title = "Vaccinations of Brazil", 
+       x = "Month", 
+       y = "Population (Million)",
+       fill = "Vaccin Condition")+
+  theme(legend.position="right",
+        text = element_text(size = 10, face = "bold", color = "black"))
+  
+ggplotly(p2) 
+```
+
+Vaccination has been highly recommended as one of the effective ways to fight the COVID virus.
+
+In Figure\@ref(fig:vaccinplot), in Brazil, vaccination is being implemented from the beginning of 2021 and the vaccination rate is very fast, with the blue part being the total vaccination, the pink part being the first dose of vaccine and the green part being the full dose.
+
+```{r}
+bvaccin <- covid_bra %>% 
+  select(people_fully_vaccinated,population, date) %>% 
+  mutate(vaccin_rate = people_fully_vaccinated/population) %>% 
+  select(vaccin_rate,date) %>% 
+  drop_na() 
+bvaccinrate <- bvaccin[rev(order(as.Date(bvaccin$date))),]
+
+wvaccin <- covid %>% 
+  select(people_vaccinated,population, date) %>% 
+  mutate(vaccin_rate = people_vaccinated/population) %>% 
+  select(vaccin_rate,date) %>% 
+  drop_na() %>% 
+  filter(date=="2021-08-27")
+wvaccinrate <- mean(wvaccin$vaccin_rate)
+```
+
+The newest COVID vaccin rate in Brazil is `r round(bvaccinrate[1,1]*100,digit=2)`% and the average COVID vaccin rate in the world is `r round(wvaccinrate*100, digit =2)`%, Which is `r round(((wvaccinrate/bvaccinrate[1,1])-1)*100, digit=2)`% higher than the vaccin rate in Brazil.

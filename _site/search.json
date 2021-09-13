@@ -5,14 +5,14 @@
       "title": "About this blog",
       "author": [],
       "contents": "\nThis Blog is for Blogging Practice.\n\n\n\n",
-      "last_modified": "2021-09-11T18:34:08+08:00"
+      "last_modified": "2021-09-13T20:39:44+08:00"
     },
     {
       "path": "index.html",
       "title": "Blogs for ETC5523",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-09-11T18:34:09+08:00"
+      "last_modified": "2021-09-13T20:39:45+08:00"
     }
   ],
   "collections": ["posts/posts.json"]

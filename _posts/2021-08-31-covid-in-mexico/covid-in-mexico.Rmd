@@ -124,7 +124,8 @@ This table includes the date, new cases, new death people and new tests people b
 The vacancy in the number of new deaths in January and February 2020 implies that there were not many deaths caused by the COVID virus, but this may be because the COVID cases only appeared and grew rapidly at the end of February. In contrast, new cases fluctuated greatly from March to September 2020. new cases and deaths decreased to a low point in October 2020 but continued to fluctuate again in November. The number of deaths fluctuated downward until March 2021, but the number of new cases still fluctuated significantly until the latest.
 
 
-```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number"}
+```{r totaldeath, fig.cap="The Growth of Carform Cases and Death Number in Mexico"}
+options(scipen=200)
 covid_mex%>% 
   select(total_deaths,total_cases,date) %>% 
   rename("Total Deaths" = total_deaths,
@@ -132,13 +133,14 @@ covid_mex%>%
   pivot_longer(cols = c(`Total Deaths`,`Total Cases`), 
                names_to = "Variable",   
                values_to = "Count Number") %>% 
-  ggplot( aes(x = Variable, y =`Count Number`, fill=Variable)) +
+  mutate(`Count Number (Million)`=`Count Number`/1000000) %>% 
+  ggplot( aes(x = Variable, y =`Count Number (Million)`, fill=Variable)) +
   geom_bar(stat='identity', position='identity') +
   scale_fill_manual(values = c("#4fa9c9", "#2a7189"))+
   theme_bw() +
   labs(title = 'Date: {round(frame_time)}', 
        x = ' ', 
-       y = 'Number of People') +
+       y = 'Number of People (Million)') +
   transition_time(date)
 ```
 
@@ -159,21 +161,7 @@ wdeathrate <- covid%>%
   select(death_rate) %>% 
   drop_na() 
 ```
-The world average COVID death rate is `r mean(wdeathrate$death_rate)` and the average COVID death rate of Mexico is `r mean(deathrate$death_rate)`, Which is `r mean(deathrate$death_rate)/mean(wdeathrate$death_rate)` times of the world average.
-
-### The Trend of Daily Death Number
-```{r daily, fig.cap="The Trend of Daily Case Number"}
-deathplot <- covid_mex %>% 
-  rename("Date" = date,
-         "New Deaths" = new_deaths) %>% 
-  ggplot(aes(x=Date, y=`New Deaths`))+
-  geom_line(color="steelblue")+
-  theme_light()
-deathplot <- ggplotly(deathplot)
-deathplot
-```
-
-Since the mortality rate of the new coronavirus outbreak in Mexico is much higher than the world average, I wonder about the number of new deaths it has added each day, and according to the Figure\@ref(fig:daily), we can tell that the number of deaths on the days 2020-10-05, 2021-02-05, 2021-04-10, and 2021-06-01 are much higher than the number of deaths in the time period they are in.
+The world average COVID death rate is `r round(mean(wdeathrate$death_rate)*100, digits = 2)` and the average COVID death rate of Mexico is `r round(mean(deathrate$death_rate), digits = 2)`, Which is `r round(mean(deathrate$death_rate)/mean(wdeathrate$death_rate), digits = 2)` times of the world average.
 
 ### Top 6 Days With Biggest COVID Cases Number
 
@@ -243,34 +231,3 @@ postitiveplot
 ```
 
 Excluding the number of tests that led to a sharp increase in the number of confirmations on individual dates, we see from the Figure\@ref(fig:postitive) that the percentage of positive tests has a large fluctuation, with the percentage of positive tests reaching a peak around July 2020 until May 26, 2021, when it dropped to 0.156, followed by a wave of increases until the latest data showed a small decrease.
-
-### The Percentage Trend of People Get Vaccin
-```{r vaccin, fig.cap="The Percentage Trend of People Get Vaccin"}
-vaccinplot <- covid_mex %>% 
-  mutate(`Vaccin Rate` = people_vaccinated/population)%>% 
-  rename("Date"=date) %>% 
-  ggplot(aes(Date, `Vaccin Rate`))+
-  geom_line(color =  "#293352")+
-  theme_light()
-vaccinplot <- ggplotly(vaccinplot)
-vaccinplot
-```
-
-```{r}
-vaccin <- covid_mex %>% 
-  select(people_vaccinated,population, date) %>% 
-  mutate(vaccin_rate = people_vaccinated/population) %>% 
-  select(vaccin_rate,date) %>% 
-  drop_na() 
-vaccinrate <- vaccin[rev(order(as.Date(vaccin$date))),]
-
-wvaccin <- covid %>% 
-  select(people_vaccinated,population, date) %>% 
-  mutate(vaccin_rate = people_vaccinated/population) %>% 
-  select(vaccin_rate,date) %>% 
-  drop_na() %>% 
-  filter(date=="2021-08-27")
-wvaccinrate <- mean(wvaccin$vaccin_rate)
-```
-
-The newest COVID vaccin rate in Mexico is `r vaccinrate[1,1]` and the average COVID vaccin rate in the world is `r wvaccinrate`, Which is `r ((wvaccinrate/vaccinrate[1,1])-1)*100`% higher than the vaccin rate in Mexico.

@@ -100,7 +100,7 @@ covid_bra%>%
   ggplot( aes(x = Variable, y =`Count Number (Million)`, fill=Variable)) +
   geom_bar(stat='identity', position='identity') +
   scale_fill_manual(values = c("#b8a9c9", "#622569"))+
-  theme_bw() +
+  theme_minimal() + 
   labs(title = 'Date: {round(frame_time)}', 
        x = ' ', 
        y = 'Number of People (Million)') +
@@ -147,7 +147,7 @@ deathplot <- covid_bra %>%
   geom_line(aes(y=new_deaths), color="#b8a9c9")+
   geom_point(aes(y = new_deaths), color = "#622569", size = 0.8)+
   gghighlight(new_deaths > 3500)+
-  theme_bw()+
+  theme_minimal() + 
   labs(title = "Daily New Death Numbers",
        x = "Date",
        y = "New Death Number")+
@@ -177,7 +177,7 @@ p2 <- ggplot(vaccin, aes(x = date))+
             alpha = 0.3, color="#622569") +
   geom_area(aes(y = `People get 2 doses`, fill = "People get 2 doses"), 
             alpha = 0.3, color="#588c7e") +
-  theme_bw() +
+  theme_minimal() + 
   labs(title = "Vaccinations of Brazil", 
        x = "Month", 
        y = "Population (Million)",

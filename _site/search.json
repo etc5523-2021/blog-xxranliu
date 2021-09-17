@@ -5,14 +5,20 @@
       "title": "About this blog",
       "author": [],
       "contents": "\nThis Blog is for Blogging Practice.\n\n\n\n",
-      "last_modified": "2021-09-16T02:04:26+08:00"
+      "last_modified": "2021-09-17T16:20:20+08:00"
     },
     {
       "path": "index.html",
       "title": "Blogs for ETC5523",
       "author": [],
       "contents": "\n\n\n\n",
-      "last_modified": "2021-09-16T02:04:26+08:00"
+      "last_modified": "2021-09-17T16:20:21+08:00"
+    },
+    {
+      "path": "README.html",
+      "author": [],
+      "contents": "\nMy Blog\nThis is the blog of Mexico COVID. The URL of this blog is https://xxranliu.netlify.app/.\nBlog Post 1\nThis assessment is due Fri Sep 3 2021 11.55PM AEST.\nMy selected country is Mexico.\nThe relevant blog post for this assessment is in https://xxranliu.netlify.app/posts/2021-08-31-covid-in-mexico.html\n\nSelected a country\n\nWebsite with R markdown\n\nA working URL\n\nData description\n\nShort data story\n\nTable 1\n\nTable 2\n\nCustomised website with CSS\n\nSubmitted the entire blog to Moodle\nBlog Post 2\nThis assessment is due Fri Sep 17 2021 11.55PM AEST.\nMy selected country is Brazil.\nThe relevant blog post for this assessment is in https://xxranliu.netlify.app/posts/2021-09-11-covid-in-brazil.html\n\nSelected a new country\n\nData Story 1\n\nData Story 2\n\nGraph 1\n\nGraph 2\n\nSubmitted the entire blog to Moodle\n",
+      "last_modified": "2021-09-17T16:20:22+08:00"
     }
   ],
   "collections": ["posts/posts.json"]

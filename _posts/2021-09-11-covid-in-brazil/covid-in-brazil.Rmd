@@ -151,7 +151,8 @@ deathplot <- covid_bra %>%
   labs(title = "Daily New Death Numbers",
        x = "Date",
        y = "New Death Number")+
-  theme(text = element_text(size = 10, face = "bold", color = "black"))
+  theme(text = element_text(size = 10, face = "bold", color = "black"))+
+  scale_x_date(breaks = "3 month")
 
 deathplot <- ggplotly(deathplot)
 deathplot
@@ -183,7 +184,8 @@ p2 <- ggplot(vaccin, aes(x = date))+
        y = "Population (Million)",
        fill = "Vaccin Condition")+
   theme(legend.position="right",
-        text = element_text(size = 10, face = "bold", color = "black"))
+        text = element_text(size = 10, face = "bold", color = "black"))+
+  scale_x_date(breaks = "2 month")
   
 ggplotly(p2) 
 ```

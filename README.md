@@ -12,15 +12,15 @@ My selected country is Mexico.
 
 The relevant blog post for this assessment is in https://xxranliu.netlify.app/posts/2021-08-31-covid-in-mexico.html
 
-- [-] Selected a country
-- [-] Website with R markdown 
-- [-] A working URL
-- [-] Data description
-- [-] Short data story
-- [-] Table 1
-- [-] Table 2
-- [-] Customised website with CSS
-- [-] Submitted the entire blog to Moodle
+- [x] Selected a country
+- [x] Website with R markdown 
+- [x] A working URL
+- [x] Data description
+- [x] Short data story
+- [x] Table 1
+- [x] Table 2
+- [x] Customised website with CSS
+- [x] Submitted the entire blog to Moodle
 
 ## Blog Post 2
 
@@ -30,10 +30,10 @@ My selected country is Brazil.
 
 The relevant blog post for this assessment is in https://xxranliu.netlify.app/posts/2021-09-11-covid-in-brazil.html
 
-- [-] Selected a new country
-- [-] Data Story 1
-- [-] Data Story 2
-- [-] Graph 1
-- [-] Graph 2
-- [-] Submitted the entire blog to Moodle
+- [x] Selected a new country
+- [x] Data Story 1
+- [x] Data Story 2
+- [x] Graph 1
+- [x] Graph 2
+- [ ] Submitted the entire blog to Moodle
 

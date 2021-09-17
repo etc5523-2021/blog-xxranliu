@@ -35,5 +35,5 @@ The relevant blog post for this assessment is in https://xxranliu.netlify.app/po
 - [x] Data Story 2
 - [x] Graph 1
 - [x] Graph 2
-- [ ] Submitted the entire blog to Moodle
+- [x] Submitted the entire blog to Moodle
 

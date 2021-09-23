@@ -1,7 +1,9 @@
 # My Blog
 
+Xinran Liu
+STUDENT ID:32338732
 
-This is the blog of Mexico COVID.
+This is the blog of Blog post entry.
 The URL of this blog is https://xxranliu.netlify.app/.
 
 ## Blog Post 1
